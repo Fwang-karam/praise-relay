@@ -32,7 +32,8 @@ class handler(BaseHTTPRequestHandler):
             return self.error(404, "없는 주소예요.")
         try:
             entries = _store.list_entries()
-        except Exception:
+        except Exception as exc:
+            print(f"list_entries 실패: {exc!r}", file=sys.stderr)
             return self.error(500, "목록을 불러오지 못했어요.")
         self.send_json(200, {"entries": entries})
 
@@ -72,7 +73,8 @@ class handler(BaseHTTPRequestHandler):
         }
         try:
             entry = _store.add_entry(row)
-        except Exception:
+        except Exception as exc:
+            print(f"add_entry 실패: {exc!r}", file=sys.stderr)
             return self.error(500, "저장하지 못했어요. 잠시 뒤 다시 해 주세요.")
         self.send_json(201, {"entry": entry})
 
